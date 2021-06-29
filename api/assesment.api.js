@@ -52,7 +52,7 @@ assesment.delete("/deleteAssesment/:assesmentId",async(req,res)=>{
                 const course = await courseModel.findOne({_id:assesment.courseId , instructorId:instructor._id});
                 if(course){
                     await assesmentModel.deleteOne({_id});
-                    res.json({message:`assesmt ${assesment.title} deleted`});
+                    res.json({message:`assesment ${assesment.title} deleted`});
                 }
                 else{
                     res.json({message:"you haven't acces to this exam"})
