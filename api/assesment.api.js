@@ -37,7 +37,8 @@ assesment.get("/solveAssesment/:assesmentId", async(req,res)=>{
     const assesment = await assesmentModel.findOne({_id })
     res.json({assesment});         
      
-})assesment.delete("/deleteAssesmet/:assesmentId",async(req,res)=>{
+})
+assesment.delete("/deleteAssesment/:assesmentId",async(req,res)=>{
     const {username , token} = req.body;
     jwt.verify(token , "instructor" , async(err,decodded)=>{
         if(err){
