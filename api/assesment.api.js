@@ -32,4 +32,24 @@ assesment.post('/createAssesment',async(req,res)=>{
 
     
 })
+assesment.get("/solveAssesment/:assesmentId", async(req,res)=>{
+    let _id = req.params.assesmentId;
+    const assesment = await assesmentModel.findOne({_id })
+    res.json({assesment});         
+     
+})
+assesment.delete("/deleteAssesmet/:assesmentId",async(req,res)=>{
+    const {username} = req.body;
+    let _id = req.params.assesmentId;
+    const assesment = await assesmentModel.findOne({_id })
+    const instructor = await userModel.findOne({username});
+    const course = await courseModel.findOne({_id:assesment.courseId , instructorId:instructor._id});
+    if(course){
+        await assesmentModel.deleteOne({_id});
+        res.json({message:`assesmt ${assesment.title} deleted`});
+    }
+    else{
+        res.json({message:"you haven't acces to this exam"})
+    }
+})
 module.exports=assesment;
