@@ -39,17 +39,23 @@ assesment.get("/solveAssesment/:assesmentId", async(req,res)=>{
      
 })
 assesment.delete("/deleteAssesmet/:assesmentId",async(req,res)=>{
-    const {username} = req.body;
-    let _id = req.params.assesmentId;
-    const assesment = await assesmentModel.findOne({_id })
-    const instructor = await userModel.findOne({username});
-    const course = await courseModel.findOne({_id:assesment.courseId , instructorId:instructor._id});
-    if(course){
-        await assesmentModel.deleteOne({_id});
-        res.json({message:`assesmt ${assesment.title} deleted`});
-    }
-    else{
-        res.json({message:"you haven't acces to this exam"})
-    }
-})
-module.exports=assesment;
+    const {username , token} = req.body;
+    jwt.verify(token , "instructor" , async(err,decodded)=>{
+        if(err){
+            res.json("error in token");
+        }
+        else{
+            let _id = req.params.assesmentId;
+            const assesment = await assesmentModel.findOne({_id })
+            const instructor = await userModel.findOne({username});
+            const course = await courseModel.findOne({_id:assesment.courseId , instructorId:instructor._id});
+            if(course){
+                await assesmentModel.deleteOne({_id});
+                res.json({message:`assesmt ${assesment.title} deleted`});
+            }
+            else{
+                res.json({message:"you haven't acces to this exam"})
+            }
+        }
+    })
+})module.exports=assesment;
