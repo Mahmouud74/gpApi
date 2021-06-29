@@ -7,7 +7,7 @@ const jwt=require("jsonwebtoken");
 const path = require('path')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/courseImages/')
+      cb(null, 'uploads/')
     },
     filename: function (req, file, cb) {
         x=file.originalname.replace(/\s+/g, '');
@@ -24,7 +24,7 @@ var storage = multer.diskStorage({
     }   
   }
 
-const courseImage = multer({dest:'uploads/courseImages/',storage , fileFilter });
+const courseImage = multer({dest:'uploads/',storage , fileFilter });
 addCourse.post('/addCourse',courseImage.single('courseImage'),async(req,res)=>{
     const {courseName, courseCode, courseDepartment, prerequisite, token , username}=req.body;
     console.log(req.file);
@@ -39,7 +39,7 @@ addCourse.post('/addCourse',courseImage.single('courseImage'),async(req,res)=>{
                     res.json({message:"unsupportes file type"})
                 }
                 else{
-                    let pathh= req.file.path.replace('uploads/','');
+                    let pathh= req.file.path
                     let imageUrl="http://lmsapis.herokuapp.com/"+pathh;
                     let courses = await courseModel.findOne({courseCode});
                     if (courses) {
