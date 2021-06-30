@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const multer = require('multer')
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/userImages/')
+      cb(null, './uploads/userImages/')
     },
     filename: function (req, file, cb) {
         x=file.originalname.replace(/\s+/g, '');
@@ -22,12 +22,13 @@ var storage = multer.diskStorage({
         cb(null , true);
     }   
   }
-  const userImage = multer({dest:'uploads/userImages/',storage , fileFilter });
+  const userImage = multer({dest:'./uploads/userImages/',storage , fileFilter });
 
 signup.post('/signup',userImage.single("userImage"),
 check('name').matches(/[A-Z][a-z]*/),
 check('username').matches(/[a-z]*/),
 check('email').isEmail(),
+check('mobilePhone').matches(/^(01)[0512][0-9]{8}$/),
 check('password').matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
 check('rePassword').custom((value, { req }) => {
     if (value !== req.body.password) {
@@ -37,7 +38,7 @@ check('rePassword').custom((value, { req }) => {
 })
 ,async (req,res)=>{
     //res.json({messge:'signup'})
-    const {name , username , email , password , rePassword , gender  , role } = req.body
+    const {name , username , email , password , rePassword , gender  , role , mobilePhone } = req.body
     const errors = validationResult(req)
     console.log(errors.array());
     if(errors.isEmpty()){
@@ -52,7 +53,7 @@ check('rePassword').custom((value, { req }) => {
                     else {
                         let pathh= req.file.path.replace('uploads/','');
                         let imageUrl="http://lmsapis.herokuapp.com/"+pathh;
-                        await userModel.insertMany({name , username , email , password : hash , gender , role , imageUrl });
+                        await userModel.insertMany({name , username , email , password : hash , gender , role , imageUrl,mobilePhone });
                         user = await userModel.findOne({username})
                         res.json({message:'user'+username+'Created' , user});
                     }
@@ -82,7 +83,7 @@ check('rePassword').custom((value, { req }) => {
     }
     return true;
 })  ,async(req,res)=>{
-    const {name , username , email , password , rePassword , gender , token } = req.body;
+    const {name , username , email , password , rePassword , gender , token,mobilePhone } = req.body;
     jwt.verify(token ,"admin" ,async (err, decodded)=>{
         if(err){
             res.json({message:"there is error"});
@@ -102,7 +103,7 @@ check('rePassword').custom((value, { req }) => {
                             else{
                                 let pathh= req.file.path.replace('uploads/','');
                                 let imageUrl="http://lmsapis.herokuapp.com/"+pathh;
-                                await userModel.insertMany({name , username , email , password : hash , gender , role:"instructor" ,imageUrl});
+                                await userModel.insertMany({name , username , email , password : hash , gender , role:"instructor" ,imageUrl,mobilePhone});
                                 user = await userModel.findOne({username})
                                 res.json({message:'Instructor'+username+'Created' , user});
                             }
@@ -134,6 +135,7 @@ signup.get('/searchuser' , async (req,res)=>{
         res.json({message:"notFound users"})
     }
 })
+
 signup.get('/searchInstructor' , async (req,res)=>{
     const searchKey = req.query.username;
     console.log(searchKey);
