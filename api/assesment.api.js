@@ -86,5 +86,27 @@ assesment.get('/allAssesments',async(req,res)=>{
     }
     
 })
+assesment.get('/courseExams/:courseId',async(req,res)=>{
+    let courseId = req.params.courseId;
+    let courseExams = await assesmentModel.find({courseId ,category:"exam"});
+    if(courseExams[0]){
+        res.json({courseExams});
+    }
+    else{
+        res.json({message : "there is no  Exams for this course"})
+    }
+
+})
+assesment.get('/courseQuizes/:courseId',async(req,res)=>{
+    let courseId = req.params.courseId;
+    let courseQuizes = await assesmentModel.find({courseId ,category:"quiz"});
+    if(courseQuizes[0]){
+        res.json({courseQuizes});
+    }
+    else{
+        res.json({message : "there is no Quizes for this course"})
+    }
+
+})
 
 module.exports=assesment;
