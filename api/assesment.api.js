@@ -65,5 +65,26 @@ assesment.delete("/deleteAssesment/:assesmentId",async(req,res)=>{
         }
     })
 })
+assesment.get('/courseAssesments/:courseId',async(req,res)=>{
+    let courseId = req.params.courseId;
+    let courseAssesments =await assesmentModel.find({courseId});
+    if(courseAssesments[0]){
+        res.json({courseAssesments})
+    }
+    else{
+        res.json({message:"no assesment for this course"})
+    }
+    
+})
+assesment.get('/allAssesments',async(req,res)=>{
+    let assesments =await assesmentModel.find({});
+    if(assesments){
+        res.json({assesments})
+    }
+    else{
+        res.json({message:"no assesment for this course"})
+    }
+    
+})
 
 module.exports=assesment;
