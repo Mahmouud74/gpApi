@@ -6,11 +6,11 @@ const jwt=require("jsonwebtoken")
 signin.post('/signin',async(req,res)=>{
     //res.json({messge:'signin'})
     const {email , password} = req.body
-    let user = await userModel.findOne({email})
+    let user = await userModel.findOne({email:email.toLowerCase()})
     if (user){
         const match = await bcrypt.compare(password, user.password); 
         if(match){
-            console.log(typeof(user._id));
+            //console.log(typeof(user._id));
             let token
             res.role=user.role;
             if(user.role==='student'){
@@ -22,7 +22,7 @@ signin.post('/signin',async(req,res)=>{
             else if (user.role==='instructor'){
                 token = jwt.sign({role:'instructor' , username : user.username  },"instructor")
             }
-            res.json({uname:user.username, token , message:user.role , image:user.imageUrl})
+            res.json({uname:user.username, token , message:user.role ,message:user.imageUrl})
         }
         else{
             res.json({message:"login failed",status:"Password inCorrect",})
@@ -33,5 +33,6 @@ signin.post('/signin',async(req,res)=>{
     }
    // console.log(res.role);
 })
+
 
 module.exports=signin
