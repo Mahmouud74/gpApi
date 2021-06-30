@@ -4,6 +4,7 @@ const studentCourseModel = require('../models/studentCourse.model');
 const userModel = require("../models/user.model");
 const assesmentModel = require('../models/assesment.model')
 const jwt=require("jsonwebtoken");
+const moment = require('moment');
 assesment.post('/createAssesment',async(req,res)=>{
     const {openDate , dueDate , category ,courseId , fullMark ,questions , token , username,title} = req.body;
     jwt.verify(token ,"instructor" ,async (err, decodded)=>{
