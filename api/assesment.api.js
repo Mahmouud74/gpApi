@@ -12,25 +12,29 @@ assesment.post('/createAssesment',async(req,res)=>{
         }
         else{
             let instructorCourse = await userModel.findOne({username})
-            let course = await courseModel.findOne({_id:courseId , instructorId:instructorCourse._id});
-            if(course){
-                const assesment = await assesmentModel.findOne({courseId:course._id , title});
-                if(assesment){
-                    res.json({message:"please enter another title"})
+            if(instructorCourse){
+                let course = await courseModel.findOne({_id:courseId , instructorId:instructorCourse._id});
+                if(course){
+                    const assesment = await assesmentModel.findOne({courseId:course._id , title});
+                    if(assesment){
+                        res.json({message:"please enter another title"})
+                    }
+                    else{
+                        await assesmentModel.insertMany({openDate , dueDate, category ,courseId, fullMark , questions,title});
+                        res.json({message:"done"})
+                    }
                 }
-                else{
-                    await assesmentModel.insertMany({openDate , dueDate, category ,courseId, fullMark , questions,title});
-                    res.json({message:"done"})
-                }
+                else
+                {
+                    res.json({message:"invalidCourse"})
+                } 
             }
-            else
-            {
-                res.json({message:"invalidCourse"})
-            } 
-    }
-    })
+            else{
+                res.json({message:"invalid username"})
+            }
 
-    
+    }
+    })  
 })
 assesment.get("/solveAssesment/:assesmentId", async(req,res)=>{
     let _id = req.params.assesmentId;
