@@ -42,7 +42,7 @@ check('rePassword').custom((value, { req }) => {
     const errors = validationResult(req)
     console.log(errors.array());
     if(errors.isEmpty()){
-        let user = await userModel.findOne({email});
+        let user = await userModel.findOne({email:email.toLowerCase()});
         if(user === null){
             user = await userModel.findOne({username});
             if (user === null) {
@@ -53,7 +53,7 @@ check('rePassword').custom((value, { req }) => {
                     else {
                         let pathh= req.file.path.replace('uploads/','');
                         let imageUrl="http://lmsapis.herokuapp.com/"+pathh;
-                        await userModel.insertMany({name , username , email , password : hash , gender , role , imageUrl,mobilePhone });
+                        await userModel.insertMany({name , username , email:email.toLowerCase() , password : hash , gender , role , imageUrl,mobilePhone });
                         user = await userModel.findOne({username})
                         res.json({message:'user'+username+'Created' , user});
                     }
@@ -89,10 +89,11 @@ check('rePassword').custom((value, { req }) => {
             res.json({message:"there is error"});
         }
         else{
+            
             const errors = validationResult(req)
             console.log(errors.array());
             if(errors.isEmpty()){
-                let user = await userModel.findOne({email});
+                let user = await userModel.findOne({email:email.toLowerCase()});
                 if(user === null){
                     user = await userModel.findOne({username});
                     if (user === null) {
@@ -103,7 +104,7 @@ check('rePassword').custom((value, { req }) => {
                             else{
                                 let pathh= req.file.path.replace('uploads/','');
                                 let imageUrl="http://lmsapis.herokuapp.com/"+pathh;
-                                await userModel.insertMany({name , username , email , password : hash , gender , role:"instructor" ,imageUrl,mobilePhone});
+                                await userModel.insertMany({name , username , email:email.toLowerCase() , password : hash , gender , role:"instructor" ,imageUrl,mobilePhone});
                                 user = await userModel.findOne({username})
                                 res.json({message:'Instructor'+username+'Created' , user});
                             }
@@ -127,7 +128,7 @@ check('rePassword').custom((value, { req }) => {
 signup.get('/searchuser' , async (req,res)=>{
     const searchKey = req.query.username;
     console.log(searchKey);
-    const searchResult = await userModel.find({$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},{email:{$regex:searchKey}}]})
+    const searchResult = await userModel.find({$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},{email:{$regex:searchKey.toLowerCase()}}]})
     if(searchResult){
     res.json({searchResult});
     }
@@ -139,8 +140,8 @@ signup.get('/searchuser' , async (req,res)=>{
 signup.get('/searchInstructor' , async (req,res)=>{
     const searchKey = req.query.username;
     console.log(searchKey);
-    const searchResult = await userModel.findOne({$and:[{$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},{email:{$regex:searchKey}}]}
-                                                , {role:"instructor"}]})
+    const searchResult = await userModel.findOne({$and:[{$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},
+                                                 {email:{$regex:searchKey.toLowerCase()}}]}, {role:"instructor"}]})
     if(searchResult){
     res.json({searchResult});
     }
@@ -151,8 +152,8 @@ signup.get('/searchInstructor' , async (req,res)=>{
 signup.get('/searchStudent' , async (req,res)=>{
     const searchKey = req.query.username;
     console.log(searchKey);
-    const searchResult = await userModel.findOne({$and:[{$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},{email:{$regex:searchKey}}]}
-                                                , {role:"student"}]})
+    const searchResult = await userModel.findOne({$and:[{$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},
+                                                 {email:{$regex:searchKey.toLowerCase()}}]}, {role:"student"}]})
     if(searchResult){
     res.json({searchResult});
     }
@@ -163,8 +164,8 @@ signup.get('/searchStudent' , async (req,res)=>{
 signup.get('/searchAdmin' , async (req,res)=>{
     const searchKey = req.query.username;
     console.log(searchKey);
-    const searchResult = await userModel.findOne({$and:[{$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},{email:{$regex:searchKey}}]}
-                                                , {role:"admin"}]})
+    const searchResult = await userModel.findOne({$and:[{$or:[{username:{$regex:searchKey}},{name:{$regex:searchKey}},
+                                                 {email:{$regex:searchKey.toLowerCase()}}]}, {role:"admin"}]})
     if(searchResult){
     res.json({searchResult});
     }
