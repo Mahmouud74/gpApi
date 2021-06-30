@@ -14,6 +14,7 @@ const { db } = require('./grade.model');
    ],
    role: { type: String, default: 'student', enum: ["student", "instructor", "admin"] , required:true },
    imageUrl:{type:String},
+   mobilePhone:{type:String},
 
    //accessToken: { type: String },
    //dateOfJoin: { type: String },
