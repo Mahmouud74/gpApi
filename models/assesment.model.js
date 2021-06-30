@@ -5,7 +5,7 @@ const assesmentSchema = mongoose.Schema({
     courseId:{type:mongoose.Schema.Types.ObjectId,ref:'course' , require:true},
     category:{type:String , enum: ["exam", "quiz"] , required:true }, 
     fullMark:{type:String } , 
-    questions:[{question :String ,answer:[{option:String, correct:Boolean}]}],
+    questions:{type:[{question :String ,answer:[{option:String, correct:Boolean}]}],require:true},
     title : {type :String}
                                         
     //fileUrl:{type:String}
