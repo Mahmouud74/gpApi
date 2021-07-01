@@ -11,7 +11,7 @@ profile.get('/userProfile/:username',async(req,res)=>{
     if(user.role === "student")
     {
         let studentCourses = await studentCourseModel.find({userID:user._id})
-        let registeredCourses ;
+        let registeredCourses=[] ;
         for(let i=0;i<studentCourses.length;i++){ 
               registeredCourses.push(await courseModel.findOne({_id:studentCourses[i].courseId}))
         }
