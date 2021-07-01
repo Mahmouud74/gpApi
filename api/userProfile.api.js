@@ -10,9 +10,13 @@ profile.get('/userProfile/:username',async(req,res)=>{
     console.log(user.role);
     if(user.role === "student")
     {
-        let studentCourses = await studentCourseModel.find({userID:user._id})
+        let studentCourses = await studentCourseModel.find({userID:user._id});
+        Let registeredCourses 
+        for(let i=0;i<studentCourses.length;i++){ 
+              registeredCourses.push(await courseModel.findOne({_id:studentCourses[i].courseId}))
+        }
         let assigmentSolutions = await assigmentSolutionModel.find({userId:user._id})
-        res.json({user,studentCourses , assigmentSolutions})
+        res.json({user,registeredCourses , assigmentSolutions})
     }
     else if (user.role === "instructor"){
         let instructorCourses = await courseModel.find({instructorId: user._id })
