@@ -32,13 +32,13 @@ profile.get('/userProfile/:username',async(req,res)=>{
     }
 })
 
-profile.get('/userprofile/:id',async(req,res)=>{
-    let userID = req.params.id;
+profile.get('/userprofile/:userId',async(req,res)=>{
+    let userID = req.params.userId;
     let user = await userModel.findOne({_id:userID});
     console.log(user.role);
     if(user.role === "student")
     {
-        let studentCourses = await studentCourseModel.find({userID})
+        let studentCourses = await studentCourseModel.find({userID:user._id})
         let registeredCourses=[] ;
         for(let i=0;i<studentCourses.length;i++){ 
               registeredCourses.push(await courseModel.findOne({_id:studentCourses[i].courseId}))
