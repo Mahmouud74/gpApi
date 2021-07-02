@@ -137,7 +137,8 @@ assesment.get('/courseExams/:courseId',async(req,res)=>{
         res.json({message : "there is no  Exams for this course"})
     }
 
-})assesment.get('/courseQuizes/:courseId',async(req,res)=>{
+})
+assesment.get('/courseQuizes/:courseId',async(req,res)=>{
     let courseId = req.params.courseId;
     let courseQuizes = await assesmentModel.find({courseId ,category:"quiz"});
     const d = new Date()
