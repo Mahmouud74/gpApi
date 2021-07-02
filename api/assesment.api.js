@@ -82,16 +82,29 @@ assesment.delete("/deleteAssesment/:assesmentId",async(req,res)=>{
         }
     })
 })
-assesment.get('/courseAssesments/:courseId',async(req,res)=>{
+assesment.get('/courseExams/:courseId',async(req,res)=>{
     let courseId = req.params.courseId;
-    let courseAssesments =await assesmentModel.find({courseId});
-    if(courseAssesments[0]){
-        res.json({courseAssesments})
+    let courseExams = await assesmentModel.find({courseId ,category:"exam"});
+    const d = new Date()
+    let momentDate = moment(d).format("YYYY-MM-DDTHH:MM")
+    console.log(`momentDate:${momentDate}`);
+    const assesment = await assesmentModel.find({});
+    let exams = []
+    for (let i = 0; i < courseExams.length; i++) {
+        let test = moment(momentDate).isBetween(courseExams[i].openDate,courseExams[i].dueDate)
+        //console.log(test);
+        var temp = {assesment:courseExams[i],open:test};
+        console.log(temp);
+        exams.push(temp);
+    }
+    if(exams[0]){
+        res.json({exams});
+        
     }
     else{
-        res.json({message:"no assesment for this course"})
+        res.json({message : "there is no  Exams for this course"})
     }
-    
+
 })
 assesment.get('/allAssesments',async(req,res)=>{
     const d = new Date()
