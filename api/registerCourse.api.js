@@ -68,19 +68,19 @@ registerCourse.get('/courseStudents/:id',async(req,res)=>{
     }
 
 })
-
-registerCourse.post('/grade/:studentid',async(req,res)=>{
-    const userID = req.params.studentid;
-    let {grades , username ,assesmentId , token} = req.body ;
+registerCourse.post('/grade/:username',async(req,res)=>{
+    const studentUserName = req.params.username;
+    let {grades,assesmentId ,username, token} = req.body ;
     jwt.verify(token , "instructor" ,async (err, decodded)=>{
         if(err){
             res.json({message:"there is error"});
         }
         else{
+          let student = await userModel.findOne({username:studentUserName});
           let assesment = await assesmentModel.findOne({_id:assesmentId})
           let course = await courseModel.findOne({_id:assesment.courseId})
-          let studentCourse =await studentCourseModel.findOne({userID , courseId:course._id});
           let instructor = await userModel.findOne({username  , _id:course.instructorId});
+          let studentCourse =await studentCourseModel.findOne({userID:student._id , courseId:course._id});
           if (instructor){
                 let studentGrades=[]
                 let temp
@@ -110,4 +110,5 @@ registerCourse.post('/grade/:studentid',async(req,res)=>{
         }
     })
 })
+
 module.exports=registerCourse;
