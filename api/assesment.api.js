@@ -94,12 +94,23 @@ assesment.get('/courseAssesments/:courseId',async(req,res)=>{
     
 })
 assesment.get('/allAssesments',async(req,res)=>{
-    let assesments =await assesmentModel.find({});
-    if(assesments){
+    const d = new Date()
+    let momentDate = moment(d).format("YYYY-MM-DDTHH:MM")
+    console.log(`momentDate:${momentDate}`);
+    const assesment = await assesmentModel.find({});
+    let assesments = []
+    for (let i = 0; i < assesment.length; i++) {
+        let test = moment(momentDate).isBetween(assesment[i].openDate,assesment[i].dueDate)
+        //console.log(test);
+        var temp = {assesment:assesment[i],open:test};
+        console.log(temp);
+        assesments.push(temp);
+    }
+    if(assesments[0]){
         res.json({assesments})
     }
     else{
-        res.json({message:"no assesment for this course"})
+        res.json({message:"there is no assesments "})
     }
     
 })
