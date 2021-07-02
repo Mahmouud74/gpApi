@@ -48,10 +48,10 @@ assesment.get("/solveAssesment/:assesmentId", async(req,res)=>{
     let test = moment(momentDate).isBetween(assesment.openDate,assesment.dueDate)
     console.log(test);
     if(test){
-        res.json({assesment});         
+        res.json({assesment , open:true});         
     }
     else {
-        res.json({message:"exam closed"})
+        res.json({message:"exam closed" , open:false})
     }
      
 })
