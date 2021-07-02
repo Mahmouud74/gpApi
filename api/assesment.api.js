@@ -137,17 +137,29 @@ assesment.get('/courseExams/:courseId',async(req,res)=>{
         res.json({message : "there is no  Exams for this course"})
     }
 
-})
-assesment.get('/courseQuizes/:courseId',async(req,res)=>{
+})assesment.get('/courseQuizes/:courseId',async(req,res)=>{
     let courseId = req.params.courseId;
     let courseQuizes = await assesmentModel.find({courseId ,category:"quiz"});
-    if(courseQuizes[0]){
-        res.json({courseQuizes});
+    const d = new Date()
+    let momentDate = moment(d).format("YYYY-MM-DDTHH:MM")
+    console.log(`momentDate:${momentDate}`);
+    const assesment = await assesmentModel.find({});
+    let quizzes = []
+    for (let i = 0; i < courseQuizes.length; i++) {
+        let test = moment(momentDate).isBetween(courseQuizes[i].openDate,courseQuizes[i].dueDate)
+        //console.log(test);
+        var temp = {assesment:courseQuizes[i],open:test};
+        console.log(temp);
+        quizzes.push(temp);
+    }
+    if(quizzes[0]){
+        res.json({quizzes});
     }
     else{
         res.json({message : "there is no Quizes for this course"})
     }
 
 })
+
 
 module.exports=assesment;
